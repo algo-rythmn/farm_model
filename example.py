@@ -1,5 +1,7 @@
 from farm import *
 from insurance import *
+from costs import *
+from calc import *
 
 """
 Step 1: Define the farm parameters
@@ -43,3 +45,19 @@ Step 6: Can find the farmers end of year insurance payout by passing in the fina
 see example below
 """
 test_farm_insurance.calc_indemnity(28) #testing to see what the indemnity payment is if ave yield is 28 bu/acre
+
+"""
+Step 7: Can create a costs class which calculates the farmers costs
+Pass in instance of insurance into costs class 
+"""
+test_farm_costs = Costs(test_farm_insurance)
+
+"""
+Step 8: can initiate instance of calc class which calculates the farmers results
+Must pass in the expected price and yield at harvest
+"""
+price_estimate = 11 
+yield_estimate = 45
+
+test_farm_results = Calc(test_farm_costs, price_estimate, yield_estimate)
+test_farm_results.farm_results()
