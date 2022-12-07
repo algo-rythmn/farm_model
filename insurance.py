@@ -23,7 +23,8 @@ class Insurance:
 
     #Method retrieves the hail insurance base rate for the specific farm  
     #based on passed in township, range, and meridian, and data from baserate.csv 
-    def get_base_rate(self): 
+    @property
+    def base_rate(self): 
         fi = pd.read_csv("baserate.csv")
         farm_info = fi.values.tolist()
         for i in farm_info: 
@@ -34,7 +35,8 @@ class Insurance:
 
     #Method retrives the AFSC yield estimate for the passed in risk area and crop
     #from data in yield.csv
-    def get_yield_estimate(self): 
+    @property
+    def yield_estimate(self): 
         #convert yield csv data to list
         cy = pd.read_csv("yield.csv")
         yields = cy.values.tolist()
@@ -54,19 +56,21 @@ class Insurance:
 
 
     # method calculates per acre dollar liability 
-    def get_dollars_liability(self): 
+    @property
+    def dollars_liability(self): 
         #liability = spring insured price x coverage level x normal expected yield
-        dollars_liability = round(self.spring_price[self.crop] * self.coverage/100 * self.get_yield_estimate(), 2)
-        return dollars_liability
+        return(round(self.spring_price[self.crop] * self.coverage/100 * self.yield_estimate, 2))
 
     # gets the total farm dollar liability 
-    def get_total_liability(self): 
-        total_liability = self.get_dollars_liability()*self.insured_acres 
-        return total_liability
+    @property
+    def total_liability(self): 
+        #total liability = per acre liability x insured acres
+        return(self.dollars_liability*self.insured_acres)
     
     #method gets the subsidized hail endorsement rate 
-    def get_hail_endorsement_rate(self):
-        base_rate = self.get_base_rate()
+    @property
+    def hail_endorsement_rate(self):
+        base_rate = self.base_rate
         #if elect for hail endorsement and coverage level is greater than 50%
         if self.hail_endorsement == 'Y' and self.coverage > 50:
             if self.crop == "canolapolish" or self.crop == "canolaargentine": 
@@ -80,19 +84,20 @@ class Insurance:
         return hail_endorsement_rate
 
     #method gets the per acre hail endorsement premium
-    def get_per_acre_hail_endorsement_premium(self):
+    @property
+    def per_acre_hail_endorsement_premium(self):
         #hail endorsement premium = dollars liability x hail endorsement rate
-        hail_endorsement_premium = round(self.get_dollars_liability() * self.get_hail_endorsement_rate()/100, 2)
-        return hail_endorsement_premium
+        return(round(self.dollars_liability * self.hail_endorsement_rate/100, 2))
 
     #method gets total farm hail endorsement premium 
-    def get_total_hail_endorsement_premium(self):
+    @property
+    def total_hail_endorsement_premium(self):
         #total hail endorsement premium = hail endorsement premium x insured acres 
-        total_hail_endorsement_premium = self.get_per_acre_hail_endorsement_premium() * self.insured_acres
-        return total_hail_endorsement_premium
+        return(self.per_acre_hail_endorsement_premium * self.insured_acres)
 
     #method retrieves the risk area crop premium as a percentage
-    def get_crop_premium(self): 
+    @property
+    def crop_premium(self): 
         p = pd.read_csv("premium.csv")
         crop_premium = p.values.tolist()
         for i in crop_premium: 
@@ -101,40 +106,45 @@ class Insurance:
         return percent_premium
     
     #method retrieves the risk area crop premium as a dollar amount per acre
-    def get_per_acre_crop_premium(self):
-        crop_premium = round(self.get_crop_premium()/100 * self.get_dollars_liability(), 2)
-        return crop_premium
+    @property
+    def per_acre_crop_premium(self):
+        #per acre premium = crop premium percentage x dollars liability
+        return(round(self.crop_premium/100 * self.dollars_liability, 2))
 
     #method retrieves the total crop premium as a dollar amount for all acres insured
-    def get_total_crop_premium(self): 
-        total_crop_premium = self.get_per_acre_crop_premium()*self.insured_acres
-        return total_crop_premium
+    @property
+    def total_crop_premium(self): 
+        #total premium = per acre crop premium x insured acres
+        return(self.per_acre_crop_premium*self.insured_acres)
 
     #method retrieves the total premium per acre (crop premium + hail endorsement premium)
-    def get_total_premium_per_acre(self): 
-        acre_total_premium = round(self.get_per_acre_crop_premium() + self.get_per_acre_hail_endorsement_premium(), 2)
-        return acre_total_premium
+    @property
+    def total_premium_per_acre(self): 
+        #total premium = crop premium + hail endorsement
+        return(round(self.per_acre_crop_premium + self.per_acre_hail_endorsement_premium, 2))
 
     #method retrieves the total premium paid per farm for both crop insurance and hail endorsement
-    def get_total_premium(self):
-        total_premium = self.get_total_premium_per_acre() * self.insured_acres
-        return total_premium
+    @property
+    def total_premium(self):
+        #total premium = total acre premium x insured acres
+        return(self.total_premium_per_acre * self.insured_acres)
 
     #calculate yield guarantee under specified coverage level, given expected yield
-    def get_yield_guarantee(self): 
-        yield_guarantee = self.get_yield_estimate() * self.coverage / 100 
-        return yield_guarantee
+    @property
+    def yield_guarantee(self): 
+        #yield guarantee = yield estimate x coverage level
+        return(self.yield_estimate * self.coverage / 100)
 
     #calculates the total indemnity payment, method gets called by passing in final yield
     def calc_indemnity(self, y):
-        guarantee = self.get_yield_guarantee() 
+        guarantee = self.yield_guarantee 
         if guarantee > y: 
             payment = round((guarantee - y) * self.spring_price[self.crop] * self.insured_acres, 2)
-            print(f"Yield of {y} bu/acre is less than yield guarantee of {guarantee} bu/acre, thus insurance payment of ${payment} received" "\n")
+            # print(f"Yield of {y} bu/acre is less than yield guarantee of {guarantee} bu/acre, thus insurance payment of ${payment} received" "\n")
         else: 
             payment = 0
-            print(f"Yield of {y} bu/acre is higher than yield guarantee of {guarantee} bu/acre, thus no indemnity payment received" "\n")
-        return payment 
+            # print(f"Yield of {y} bu/acre is higher than yield guarantee of {guarantee} bu/acre, thus no indemnity payment received" "\n")
+        return(round(payment, 2)) 
 
     def get_insurance_information(self): 
         print(f"Insurance information for {self.insured_acres} acres of {self.crop} at {self.coverage}% coverage:")
@@ -143,16 +153,11 @@ class Insurance:
             print("Farmer has elected for crop insurance with hail endorsement")
         else:
             print("Farmer has elected for crop insurance WITHOUT hail endorsement")
-        print(f"The farmers estimated yield is: {self.get_yield_estimate()} bushels/acre, and yield guarantee is: {self.get_yield_guarantee()} bushels/acre")
-        print(f"The farmers per/acre premium is: ${self.get_total_premium_per_acre()} and total premium is: ${self.get_total_premium()}" "\n")
+        print(f"The farmers estimated yield is: {self.yield_estimate} bushels/acre, and yield guarantee is: {self.yield_guarantee} bushels/acre")
+        print(f"The farmers per/acre premium is: ${self.total_premium_per_acre} and total premium is: ${self.total_premium}" "\n")
  
  
-
     #calculates the number of crops being insured
     @classmethod
     def num_of_crops(cls):
         return cls.number_of_crops
-
-
- 
-        
