@@ -17,7 +17,6 @@ Farm Attributes:
 
 Farm Methods: 
 	** call farm.method() to retrieve ** 
-	- get_risk_area: returns risk area that the farm is located in (int) (can also just call farm.risk_area)
 	- get_farm_information: prints farm information including meridian, township, range and risk area (none)
 
 
@@ -35,7 +34,7 @@ initiate an Insurance instance with the following parameters:
 	Insurance(farm, insured_acres, crop, field, coverage, hail_endorsement)
 	- farm: instance of Farm class (Farm)  
 	- insured_acres: # of acres being insured for that crop (int)
-    	- crop: either 'canolapolish', 'canolaargentine', 'barley', 
+	- crop: either 'canolapolish', 'canolaargentine', 'barley', 
 	  'CPS' (canadian Prairie Spring), 'HRS' (Hard Red Spring) (string)
 	- field: either "S" (stubble), "F" (fallow), or "I" (irrigated) (string)
     	- coverage: either 50, 60, 70 or 80 (percent)(int)
@@ -50,25 +49,80 @@ Instance Attributes:
 	- field: either "S" (stubble), "F" (fallow), or "I" (irrigated) (string)
     	- coverage: either 50, 60, 70 or 80 (percent)(int)
     	- hail_endorsement: either 'Y' if yes, 'N' if no (string)
+	- base_rate: returns hail insurance base rate for the farm (flt)
+	- yield_estimate: returns AFSC per-acre yield estimate for the farm (flt)
+	- dollars_liability: returns the per acre dollar liability (flt)
+	- total_liability: returns the total dollar liability (flt)
+	- hail_endorsement_rate: returns the subsidized hail endorsement rate (%) (flt)
+	- per_acre_hail_endorsement_premium: returns the per acre hail endorsement premium ($) (flt)
+	- total_hail_endorsement_premium: returns the total farm hail endorsement premium ($) (flt)
+	- crop_premium: returns the risk area crop premium per acre as a % (flt)
+	- per_acre_crop_premium: returns the per acre crop premium in $ (flt)
+	- total_crop_premium: returns the total crop premium in $ for all acres insured (flt)
+	- total_premium_per_acre: returns the total premium/acre in $ and includes crop + hail endorsement (flt)
+	- total_premium: returns the total premium in $ for both crop insurance and hail endorsement (flt)
+	- yield_guarantee: returns the farmers yield guarantee (bu/acre) (flt)
+
 
 Instance Methods:
 	** call instance.method() to retrieve ** 
-	- get_base_rate: returns hail insurance base rate for the farm (int)
-	- get_yield_estimate: returns AFSC per-acre yield estimate for the farm (int)
-	- get_dollars_liability: returns the per acre dollar liability (int)
-	- get_total_liability: returns the total dollar liability (int)
-	- get_hail_endorsement_rate: returns the subsidized hail endorsement rate (%) (int)
-	- get_per_acre_hail_endorsement_premium: returns the per acre hail endorsement premium ($) (int)
-	- get_total_hail_endorsement_premium: returns the total farm hail endorsement premium ($) (int)
-	- get_crop_premium: returns the risk area crop premium per acre as a % (int)
-	- get_per_acre_crop_premium: returns the per acre crop premium in $ (int)
-	- get_total_crop_premium: returns the total crop premium in $ for all acres insured (int)
-	- get_total_premium_per_acre: returns the total premium/acre in $ and includes crop + hail endorsement (int)
-	- get_total_premium: returns the total premium in $ for both crop insurance and hail endorsement (int)
-	- get_yield_guarantee: returns the farmers yield guarantee (bu/acre) (int)
 	- calc_indemnity(yield): returns the indemnity payment based on passed in final yield (int)
 	- get_insurance_information: prints basic insurance information (none)
-        
+
+------------------------------------------------- COSTS CLASS --------------------------------------------------
+Cost information comes from : https://publications.saskatchewan.ca/#/categories/1412 Saskatchewan Crop Planning Guides 2022
+and is scaled based on crop soil zones in Alberta: https://www1.agric.gov.ab.ca/soils/soils.nsf/soilgroupmap?readform
+
+initiate a Costs instance with the following parameters: 
+	Costs(insurance)
+	- insurance: instance of Insurance class (Insurance)  
+
+Instance Attributes: 
+	** call instance.attribute to retrieve **
+	- insurance: insurance instance (INSURANCE)
+	- crop: type of crop (string)
+	- risk_area: farm risk area (int) 
+	- cost_detail_wheat: dictionary of cost detail for wheat (dictionary)
+	- cost_detail_canola: dictionary of cost detail for canola (dictionary)
+	- per_acre_variable_cost: returns operational costs per acre (flt)
+	- per_acre_fixed_cost: returns fixed costs per acre (flt)
+	- total_cost_per_acre: returns total cost per acre (fixed + variable costs) (flt)
+	- total_cost: returns total cost (flt)
+
+
+Instance Methods:
+	** call instance.method() to retrieve ** 
+	- correct_for_risk_area(cost): updates passed in cost to account for farm location and soil type (flt)
+	- calc_breakeven_yield(price): given a known price calculate breakeven yield (flt)
+	- calc_breakeven_price(yiel): given a known yield calculate breakeven price (flt)
+
+
+------------------------------------------------- CALC CLASS --------------------------------------------------
+
+initiate a Calc instance with the following parameters: 
+	Calc(costs, sale_price, final_yield)
+	- costs: instance of costs class (Costs)
+	- sale_price: final sale price ($/bu) of crop (flt)
+	- final_yield: final yield (bu/acre) of crop (flt)
+
+
+Instance Attributes: 
+	** call instance.attribute to retrieve ** 
+	- costs: instance of costs class (Costs)
+	- insured_acres: Num of insured acres (int)
+	- sale_price: final sale price ($/bu) of crop (flt)
+	- final_yield: final yield (bu/acre) of crop (flt)
+	- indemnity_payment: indemnity payment received ($) (flt)
+	- spot_revenue: revenue from selling crop at sale_price (flt)
+	- total_revenue: revenue including sale revenue and insurance revenue (flt)
+	- operating_margin: operating margin of farmer (flt)
+
+Instance Methods:
+	** call instance.method() to retrieve ** 
+	- farm_results: returns information about farm revenue, cost and operating margin 
+	- farm_results_per_acre: returns information about farm revenue, cost and operating
+	  margin on a per acre basis
+
 
 ------------------------------------------------------- Example -----------------------------------------------------
 

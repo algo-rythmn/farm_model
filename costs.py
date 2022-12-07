@@ -2,10 +2,11 @@ from insurance import *
 
 class Costs: 
     def __init__(self, insurance): 
-        self.insurance = insurance 
-        self.crop = self.insurance.crop
+        self.insurance = insurance #pass in insurance instance
+        self.crop = self.insurance.crop 
         self.risk_area = self.insurance.farm.risk_area
 
+        #dictionary of wheat costs 
         self.cost_detail_wheat = {
         'Variable Cost': {
             'Seed':26.92,
@@ -31,6 +32,7 @@ class Costs:
         }
         }
 
+        #dictionary of canola costs
         self.cost_detail_canola = {
         'Variable Cost': {
             'Seed':75.73,
