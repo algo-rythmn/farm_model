@@ -23,7 +23,7 @@ class Insurance:
     #based on passed in township, range, and meridian, and data from baserate.csv 
     @property
     def base_rate(self): 
-        fi = pd.read_csv("baserate.csv")
+        fi = pd.read_csv("DataSource/baserate.csv")
         farm_info = fi.values.tolist()
         for i in farm_info: 
             if i[0] == self.farm.township and i[1] == self.farm.range and i[2] == self.farm.meridian:
@@ -36,7 +36,7 @@ class Insurance:
     @property
     def yield_estimate(self): 
         #convert yield csv data to list
-        cy = pd.read_csv("yield.csv")
+        cy = pd.read_csv("DataSource/yield.csv")
         yields = cy.values.tolist()
         for i in yields: 
             if i[0] == self.farm.risk_area and i[1] == self.crop: 
@@ -96,7 +96,7 @@ class Insurance:
     #method retrieves the risk area crop premium as a percentage
     @property
     def crop_premium(self): 
-        p = pd.read_csv("premium.csv")
+        p = pd.read_csv("DataSource/premium.csv")
         crop_premium = p.values.tolist()
         for i in crop_premium: 
             if i[0] == self.farm.risk_area and i[1] == self.crop and i[2] == self.field and i[3] == self.coverage: 

@@ -15,7 +15,7 @@ class Farm:
     #based on passed in township, range, and meridian, and data from baserate.csv 
     @property
     def risk_area(self): 
-        fi = pd.read_csv("baserate.csv")
+        fi = pd.read_csv("DataSource/baserate.csv")
         farm_info = fi.values.tolist()
         for i in farm_info: 
             if i[0] == self.township and i[1] == self.range and i[2] == self.meridian:
