@@ -9,17 +9,15 @@ class Insurance:
     'CPS':8.44,
     'HRS':8.71
     }
-    number_of_crops = 0
 
     #initiate class with instance variables: 
-    def __init__(self, farm, insured_acres, crop, field, coverage, hail_endorsement):
+    def __init__(self, farm, coverage, hail_endorsement):
         self.farm = farm #pass in farm 
-        self.insured_acres = insured_acres #insured_acres: how many acres of crop being insured 
-        self.crop = crop #crop: either 'canolapolish', 'canolaargentine', 'CPS', 'HRS'
-        self.field = field #field: either "S" stubble, "F" fallow, or "I" irrigated
+        self.insured_acres = farm.acres #insured_acres: how many acres of crop being insured 
+        self.crop = farm.crop #crop: either 'canolapolish', 'canolaargentine', 'CPS', 'HRS'
+        self.field = farm.field #field: either "S" stubble, "F" fallow, or "I" irrigated
         self.coverage = coverage #coverage: either 50, 60, 70 or 80 (percent)
         self.hail_endorsement = hail_endorsement #hail_endoresement: 'Y' if yes, 'N' if no
-        Insurance.number_of_crops = Insurance.number_of_crops + 1 #adds 1 to number of insured crops
 
     #Method retrieves the hail insurance base rate for the specific farm  
     #based on passed in township, range, and meridian, and data from baserate.csv 
@@ -148,7 +146,6 @@ class Insurance:
 
     def get_insurance_information(self): 
         print(f"Insurance information for {self.insured_acres} acres of {self.crop} at {self.coverage}% coverage:")
-        print(f"Farm Location: mer {self.farm.meridian}, twn {self.farm.township}, rng {self.farm.range}, RA {self.farm.risk_area}")
         if self.hail_endorsement == "Y":
             print("Farmer has elected for crop insurance with hail endorsement")
         else:
@@ -157,7 +154,3 @@ class Insurance:
         print(f"The farmers per/acre premium is: ${self.total_premium_per_acre} and total premium is: ${self.total_premium}" "\n")
  
  
-    #calculates the number of crops being insured
-    @classmethod
-    def num_of_crops(cls):
-        return cls.number_of_crops

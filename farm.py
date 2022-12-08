@@ -3,10 +3,13 @@ import pandas as pd
 #Class for Farm
 class Farm: 
     #initiate class with instance variables: 
-    def __init__(self, township, range, meridian):
+    def __init__(self, township, range, meridian, crop, acres, field):
         self.township = township #farm township 
         self.range = range #farm range 
         self.meridian = meridian #farm meridian 
+        self.crop = crop #farm crop 
+        self.acres = acres #farm acres 
+        self.field = field #farm land
 
     #Method retrieves the risk area for the specific farm  
     #based on passed in township, range, and meridian, and data from baserate.csv 
@@ -23,5 +26,9 @@ class Farm:
     #Method prints out all of the farm information
     def get_farm_information(self): 
         print("Farm Information: ")
-        print(f"Farm Meridian, Township, Range: {self.meridian},{self.township},{self.range}")
-        print(f"Farm Risk Area: {self.risk_area}" "\n")
+        print(f"Township: {self.township}, Range: {self.range}, Meridian: {self.meridian}")
+        print(f"Risk Area: {self.risk_area}")
+        print(f"Crop: {self.crop}")
+        print(f"Acres: {self.acres}")
+        print(f"Field: {self.field}")
+        print("\n")

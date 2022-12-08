@@ -1,10 +1,12 @@
 from insurance import * 
 
 class Costs: 
-    def __init__(self, insurance): 
+    def __init__(self, farm, insurance = None): 
+        self.farm = farm #pass in instance of farm
         self.insurance = insurance #pass in insurance instance
-        self.crop = self.insurance.crop 
-        self.risk_area = self.insurance.farm.risk_area
+        self.crop = farm.crop
+        self.risk_area = farm.risk_area
+        self.acres = farm.acres
 
         #dictionary of wheat costs 
         self.cost_detail_wheat = {
@@ -17,7 +19,7 @@ class Costs:
             'Machinery_Operation':9.98,
             'Labour Hired':22.05,
             'Utilities and Misc': 4.23,
-            'Insurance Premium': insurance.total_premium_per_acre,
+            'Insurance Premium': self.get_premium(),
             'Interest On Operation': 7.13,
         },
         'Fixed Cost': {
@@ -43,7 +45,7 @@ class Costs:
             'Machinery_Operation':9.98,
             'Labour Hired':21.05,
             'Utilities and Misc': 4.23,
-            'Insurance Premium': insurance.total_premium_per_acre,
+            'Insurance Premium': self.get_premium(),
             'Interest On Operation': 8.46,
         },
         'Fixed Cost': {
@@ -91,6 +93,14 @@ class Costs:
             variable_costs = cost
         return cost 
 
+    #get insurance premium, if farmer elected for insurance
+    def get_premium(self): 
+        if self.insurance == None: 
+            premium = 0
+        else: 
+            premium = self.insurance.total_premium_per_acre
+        return premium 
+
     #returns total costs per acre
     @property
     def total_cost_per_acre(self): 
@@ -100,7 +110,7 @@ class Costs:
     #returns total cost
     @property
     def total_costs(self): 
-        total_cost = self.total_cost_per_acre * self.insurance.insured_acres
+        total_cost = self.total_cost_per_acre * self.acres
         return(round(total_cost, 2))
 
     #if knowing target price, can calculate yield needed to break even
