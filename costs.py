@@ -1,5 +1,7 @@
 from insurance import * 
-
+"""
+Costs class calculates the fixed and variable cost of the farm / farmer
+"""
 class Costs: 
     def __init__(self, farm, insurance = None): 
         self.farm = farm #pass in instance of farm
@@ -124,3 +126,19 @@ class Costs:
         price = round(self.total_cost_per_acre / y, 2) 
         print(f"Given a yield of: {y} bu/acre, to cover fixed & variable costs you would need to sell at ${price}/bu")
         return price
+
+    #update the value of dictionary variable costs canola
+    def set_variable_cost_canola(self, item, value):
+        self.cost_detail_canola['Variable Cost'][item] = value
+
+    #update value of dictionary fixed costs canola
+    def set_fixed_cost_canola(self, item, value):
+        self.cost_detail_canola['Fixed Cost'][item] = value
+
+    #update the value of dictionary variable costs wheat
+    def set_variable_cost_wheat(self, item, value): 
+        self.cost_detail_wheat['Variable Cost'][item] = value
+
+    #update the valueof dictionary fixed costs wheat
+    def set_fixed_cost_wheat(self, item, value):
+        self.cost_detail_wheat['Fixed Cost'][item] = value

@@ -10,6 +10,7 @@ class Calc:
         self.total_revenue = self.spot_revenue + self.indemnity_payment #revenue including sale revenue and insurance revenue (flt)
         self.operating_margin = round((self.total_revenue - self.costs.total_costs) / self.total_revenue * 100, 2) #operating margin of farmer (flt)
 
+    #calculates the indemnity payment, and sets to zero if farmer elects for no insurance to be used
     @property 
     def indemnity_payment(self):
         if self.costs.insurance == None: 
@@ -17,7 +18,6 @@ class Calc:
         else: 
             indemnity_payment = self.costs.insurance.calc_indemnity(self.final_yield)
         return indemnity_payment
-    
     
     # returns information about farm revenue, cost and operating margin 
     def farm_results(self): 
