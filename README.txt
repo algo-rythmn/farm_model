@@ -1,7 +1,7 @@
 ------------------------------------------------- FARM CLASS --------------------------------------------------
 
 initiate a Farm instance with the following parameters: 
-	Farm(township, range, meridian, crop, acres, field)
+	Farm(township, range, meridian, crop, acres, field, wealth)
 	- township: farm township (int)
 	- range: farm range (int)
 	- meridian: farm meridian (int)
@@ -10,6 +10,7 @@ initiate a Farm instance with the following parameters:
 	- acres: # of acres for that crop (int)
 	- crop: either 'canolapolish', 'canolaargentine', 'CPS' (canadian Prairie Spring), or 'HRS' (Hard Red Spring) (string)
 	- field: either "S" (stubble), "F" (fallow), or "I" (irrigated) (string)
+	- wealth: farmers initial wealth (int)
 
 Farm Attributes:
 	** call farm.attribute to retrieve ** 
@@ -20,10 +21,15 @@ Farm Attributes:
 	- acres (int)
 	- crop (string)
 	- field (string)
+	- wealth (int)
+	- wealth_history (array)
+	- transaction_list (array)
 
 Farm Methods: 
 	** call farm.method() to retrieve ** 
 	- get_farm_information: prints farm information (none)
+	- add_transaction(transaction type, amount, date): add transaction to farms transaction list
+	- set_wealth(amount): allows the farmer to set their wealth at a later point
 
 
 ------------------------------------------------- INSURANCE CLASS --------------------------------------------------
@@ -38,10 +44,10 @@ Instance Attributes:
 	** call instance.attribute to retrieve ** 
 	- farm: instance of Farm class (Farm)  
 	- insured_acres: # of acres being insured for that crop (int)
-    - crop: either 'canolapolish', 'canolaargentine', 'CPS' (canadian Prairie Spring), 'HRS' (Hard Red Spring) (string)
+    	- crop: either 'canolapolish', 'canolaargentine', 'CPS' (canadian Prairie Spring), 'HRS' (Hard Red Spring) (string)
 	- field: either "S" (stubble), "F" (fallow), or "I" (irrigated) (string)
-    - coverage: either 50, 60, 70 or 80 (percent)(int)
-    - hail_endorsement: either 'Y' if yes, 'N' if no (string)
+    	- coverage: either 50, 60, 70 or 80 (percent)(int)
+    	- hail_endorsement: either 'Y' if yes, 'N' if no (string)
 	- base_rate: returns hail insurance base rate for the farm (flt)
 	- yield_estimate: returns AFSC per-acre yield estimate for the farm (flt)
 	- dollars_liability: returns the per acre dollar liability (flt)
@@ -90,7 +96,12 @@ Instance Methods:
 	** call instance.method() to retrieve ** 
 	- correct_for_risk_area(cost): updates passed in cost to account for farm location and soil type (flt)
 	- calc_breakeven_yield(price): given a known price calculate breakeven yield (flt)
-	- calc_breakeven_price(yiel): given a known yield calculate breakeven price (flt)
+	- calc_breakeven_price(yield): given a known yield calculate breakeven price (flt)
+	- get_premium: calculates insurance premium if farmer elected for insurance
+	- set_variable_cost_canola(item, value): update the value of dictonary variable costs canola
+	- set_fixed_cost_canola(item, value): update the value of dictionary fixed costs canola
+	- set_variable_cost_wheat(item, value): update the value of dictionary variable costs wheat
+	- set_fixed_cost_wheat(item, value): update the value of dictionary variable costs wheat
 
 
 ------------------------------------------------- CALC CLASS --------------------------------------------------
@@ -119,6 +130,17 @@ Instance Methods:
 	- farm_results_per_acre: returns information about farm revenue, cost and operating
 	  margin on a per acre basis
 
+---------------------------------------------------- OTHER NOTES ----------------------------------------------------
+- util.py: 
+	- util contains helper methods that are used in different classes - see file for comments 
+
+- graph_app.py
+	- call to run a tkinter app that has graphing functionality for crop basis and prices
+	- see comments within code for deeper understanding of how it works
+
+- insurance_app.py
+	- call to run a tkinter app that includes an insurance calculator as well as a wealth plotter
+	- see comments within code for deeper understanding of how it works
 
 ------------------------------------------------------- Example -----------------------------------------------------
 
